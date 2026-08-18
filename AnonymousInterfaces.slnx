@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/AnonymousInterfaces/AnonymousInterfaces.csproj" />
+  <Project Path="test/AnonymousInterfaces.Tests/AnonymousInterfaces.Tests.csproj" />
+</Solution>
