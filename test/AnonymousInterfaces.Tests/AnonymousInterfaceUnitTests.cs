@@ -47,11 +47,11 @@ public class AnonymousInterfaceUnitTests
     }
 
     [TestMethod]
-    public void Method_Void()
+    public void Method_Action()
     {
         int observed = 0;
         var instance = Anonymous.Implement<ITest>()
-            .Void(x => x.A, () => { observed = 123; })
+            .Action(x => x.A, () => { observed = 123; })
             .Create();
 
         instance.A();
