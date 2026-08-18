@@ -1,0 +1,45 @@
+name: .NET
+
+on:
+  push:
+#    branches:
+#    - master
+#    - release/*
+  pull_request:
+    branches:
+    - master
+    - release/*
+    - issue*
+    - auth-refactor
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        exclude:
+          - os: ${{ !contains(github.event.head_commit.message, 'windows') && !github.event.pull_request && 'windows-latest' }}
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: | 
+          8.0.x
+          9.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
