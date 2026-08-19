@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AnonymousInterfaces.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AnonymousInterfaces.UnitTests;
@@ -211,6 +210,7 @@ public partial class AnonymousInterfaceUnitTests
         instance.E(13);
 
         Assert.AreEqual(13, core.observed);
+        Assert.Throws<NotImplementedException>(() => instance.E("0"));
     }
 
     [TestMethod]
@@ -308,12 +308,44 @@ public partial class AnonymousInterfaceUnitTests
         Assert.AreEqual("test", observedValue);
     }
 
+
+
+    [TestMethod]
+    public void IndexGetV2()
+    {
+        int observedIndex = 0;
+        string retval = "test";
+        var instance = Anonymous.Implement<ITest>()
+            .IndexGet<int, string>(index => { observedIndex = index; return retval; })
+            .Create();
+
+        string val = instance[15];
+
+        Assert.AreEqual(15, observedIndex);
+        Assert.AreEqual("test", val);
+    }
+
+    [TestMethod]
+    public void IndexSetV2()
+    {
+        int observedIndex = 0;
+        string observedValue = null;
+        var instance = Anonymous.Implement<ITest>()
+            .IndexSet<int, string>((index, value) => { observedIndex = index; observedValue = value; })
+            .Create();
+
+        instance[13] = "test";
+
+        Assert.AreEqual(13, observedIndex);
+        Assert.AreEqual("test", observedValue);
+    }
+
     [TestMethod]
     public void EventSubscribe()
     {
         Action observed = null;
         var instance = Anonymous.Implement<ITest>()
-            .EventSubscribe<Action>("X", x => { observed = x; })
+            .EventSubscribe<Action>(nameof(ITest.X), x => { observed = x; })
             .Create();
 
         Action value = () => { };
@@ -327,7 +359,7 @@ public partial class AnonymousInterfaceUnitTests
     {
         Action observed = null;
         var instance = Anonymous.Implement<ITest>()
-            .EventUnsubscribe<Action>("X", x => { observed = x; })
+            .EventUnsubscribe<Action>(nameof(ITest.X), x => { observed = x; })
             .Create();
 
         Action value = () => { };

@@ -250,6 +250,11 @@ public class NotImplementedGenerator : IIncrementalGenerator
 
     private static string SanitizeFileName(string name)
     {
+        if (name.StartsWith("global::"))
+        {
+            name = name.Substring(8);
+        }
+
         var sb = new StringBuilder(name.Length);
         foreach (char c in name)
         {
@@ -258,6 +263,7 @@ public class NotImplementedGenerator : IIncrementalGenerator
             else
                 sb.Append('_');
         }
+
         return sb.ToString();
     }
 
