@@ -28,8 +28,8 @@ public class NotImplementedGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(classInfos, Execute);
     }
 
-    private static bool IsClassWithAttribute(SyntaxNode node)
-        => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
+    private static bool IsClassWithAttribute(SyntaxNode node) =>
+        node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
 
     private static ClassInfo GetClassInfo(GeneratorSyntaxContext context)
     {

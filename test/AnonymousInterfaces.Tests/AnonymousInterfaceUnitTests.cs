@@ -19,6 +19,7 @@ public partial class AnonymousInterfaceUnitTests
         int val { get; set; }
         event Action X;
         string this[int index] { get; set; }
+        string this[int i1, int i2, int i3, int i4, int i5] { get; set; }
         new void A();
         void A(int arg);
         void A(out int arg);
@@ -308,8 +309,6 @@ public partial class AnonymousInterfaceUnitTests
         Assert.AreEqual("test", observedValue);
     }
 
-
-
     [TestMethod]
     public void IndexGetV2()
     {
@@ -338,6 +337,44 @@ public partial class AnonymousInterfaceUnitTests
 
         Assert.AreEqual(13, observedIndex);
         Assert.AreEqual("test", observedValue);
+    }
+
+    [TestMethod]
+    public void IndexGet_multiple_args()
+    {
+        var observedIndex = (0, 0, 0, 0, 0);
+        string retval = "test";
+        var instance = Anonymous.Implement<ITest>()
+            .IndexGet<int, int, int, int, int, string>((i1, i2, i3, i4, i5) =>
+            {
+                observedIndex = (i1, i2, i3, i4, i5);
+                return retval;
+            })
+            .Create();
+
+        string val = instance[5, 4, 3, 2, 1];
+
+        Assert.AreEqual((5, 4, 3, 2, 1), observedIndex);
+        Assert.AreEqual("test", val);
+    }
+
+    [TestMethod]
+    public void IndexSet_multiple_args()
+    {
+        var observedIndex = (0, 0, 0, 0, 0);
+        string observedValue = null;
+        var instance = Anonymous.Implement<ITest>()
+            .IndexSet<int, int, int, int, int, string>((i1, i2, i3, i4, i5, value) =>
+            {
+                observedIndex = (i1, i2, i3, i4, i5);
+                observedValue = value;
+            })
+            .Create();
+
+        instance[1, 2, 3, 4, 5] = "54321";
+
+        Assert.AreEqual((1, 2, 3, 4, 5), observedIndex);
+        Assert.AreEqual("54321", observedValue);
     }
 
     [TestMethod]
