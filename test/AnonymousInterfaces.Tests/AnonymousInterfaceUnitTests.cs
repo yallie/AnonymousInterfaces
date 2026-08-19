@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace AnonymousInterfaces.UnitTests;
 
 [TestClass]
-public class AnonymousInterfaceUnitTests
+public partial class AnonymousInterfaceUnitTests
 {
     public interface ITestBase
     {
@@ -187,83 +187,9 @@ public class AnonymousInterfaceUnitTests
         Assert.AreEqual(13, observed);
     }
 
-    private sealed class GenericMethodTest : ITest
+    [NotImplemented]
+    private partial class GenericMethodTest : ITest
     {
-        int ITest.valg
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        int ITest.vals
-        {
-            set { throw new NotImplementedException(); }
-        }
-
-        int ITest.val
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        event Action ITest.X
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
-        }
-
-        string ITest.this[int index]
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        void ITest.A()
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITest.A(int arg)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITest.A(out int arg)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITest.A(int arg1, ref int arg2)
-        {
-            throw new NotImplementedException();
-        }
-
-        int ITest.B()
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITest.C(params int[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITest.D(int arg1)
-        {
-            throw new NotImplementedException();
-        }
-
         public int observed;
 
         void ITest.E<T>(T arg)
@@ -273,13 +199,7 @@ public class AnonymousInterfaceUnitTests
             else
                 throw new NotImplementedException();
         }
-
-        void ITestBase.A()
-        {
-            throw new NotImplementedException();
-        }
     }
-
 
     [TestMethod]
     public void GenericMethod_RequiresImplementation()

@@ -16,4 +16,10 @@
     <ProjectReference Include="..\..\src\AnonymousInterfaces\AnonymousInterfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AnonymousInterfaces.Generator\AnonymousInterfaces.Generator.csproj"
+      OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
 </Project>

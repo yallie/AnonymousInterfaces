@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace AnonymousInterfaces.Generator;
 
+/// <summary>
+/// Implements boilerplate methods for all Action and Func delegates.
+/// </summary>
 [Generator]
 public class BuilderExtensionsGenerator : ISourceGenerator
 {
@@ -14,6 +17,13 @@ public class BuilderExtensionsGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
+        // only our own Builder<TInterface> is supported
+        var builderType = context.Compilation.GetTypeByMetadataName("AnonymousInterfaces.Util.Builder`1");
+        if (builderType == null || context.Compilation.AssemblyName != "AnonymousInterfaces")
+        {
+            return;
+        }
+
         var source = GenerateBuilderSource();
         context.AddSource("BuilderMethods.g.cs", SourceText.From(source, Encoding.UTF8));
     }
@@ -29,7 +39,7 @@ public class BuilderExtensionsGenerator : ISourceGenerator
         sb.AppendLine("    public partial class Builder<TInterface>");
         sb.AppendLine("    {");
 
-        // Генерация для Action (0..16 аргументов)
+        // generate for Action (0..16 arguments)
         for (int i = 0; i <= 16; i++)
         {
             var typeParams = i == 0 ? "" : $"<{string.Join(", ", Enumerable.Range(1, i).Select(n => $"TArg{n}"))}>";
@@ -50,7 +60,7 @@ public class BuilderExtensionsGenerator : ISourceGenerator
             sb.AppendLine($"                Method(interfaceMethodSelector, implementation);");
         }
 
-        // Генерация для Func (0..16 аргументов + возврат)
+        // generate for Func (0..16 arguments + return type)
         for (int i = 0; i <= 16; i++)
         {
             var typeParams = i == 0 ? "<TReturn>" : $"<{string.Join(", ", Enumerable.Range(1, i).Select(n => $"TArg{n}"))}, TReturn>";
